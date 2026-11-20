@@ -1,0 +1,22 @@
+body {
+  font-family: ComicSans, sans-serif;
+  background-color: Black;
+  color: DeepPink;
+  margin: 40px;
+}
+
+h1 {
+  color: DeepPink;
+}
+
+.weather-box {
+  background-color: white;
+  border: 3px solid navy;
+  border-radius: 15px;
+  padding: 20px;
+  width: 300px;
+}
+
+.credit {
+  font-size: 12px;
+}
