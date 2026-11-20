@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Weather Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Hello! I am Ilo</h1>
+  <p>This is my first web page. I made it with HTML, CSS and JavaScript.</p>
+
+  <h2>Things I like</h2>
+  <ul>
+    <li>Drawing</li>
+    <li>Music</li>
+    <li>Letter</li>
+  </ul>
+
+  <div class="weather-box">
+    <h2>Weather in London now</h2>
+    <p id="weather">Loading the weather...</p>
+  </div>
+
+  <p class="credit">Weather data by <a href="https://open-meteo.com">Open-Meteo.com</a></p>
+
+  <script>
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=51.51longitude=-0.13&current=temperature_2m,wind_speed_10m")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("weather").textContent =
+          "Temperature: " + data.current.temperature_2m + " °C, Wind: " +
+          data.current.wind_speed_10m + " km/h";
+      })
+      .catch(error => {
+        document.getElementById("weather").textContent = "Sorry, the weather is not available right now.";
+      });
+  </script>
+
+</body>
+</html>

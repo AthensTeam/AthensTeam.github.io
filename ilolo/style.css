@@ -1,0 +1,22 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: darkred;
+  color: white;
+  margin: 40px;
+}
+
+h1 {
+  color: white;
+}
+
+.weather-box {
+  background-color: black;
+  border: 3px solid black;
+  border-radius: 15px;
+  padding: 20px;
+  width: 300px;
+}
+
+.credit {
+  font-size: 12px;
+}
