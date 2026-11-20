@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Class Web Pages</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f8fb; color: #1d3557; margin: 40px; }
+    li { margin: 8px 0; font-size: 18px; }
+    a { color: #1d6fa5; }
+  </style>
+</head>
+<body>
+
+  <h1>Our Class Web Pages</h1>
+  <p>Click a name to see the page.</p>
+
+  <ul id="student-list">
+    <li>Loading the list of pages...</li>
+  </ul>
+
+  <script>
+    // ===== The only lines you may need to change =====
+    const USERNAME = "athensteam";               // your GitHub username
+    const REPOSITORY = "athensteam.github.io";   // the name of this repository
+    const HIDE = [];                              // folders NOT to show, e.g. ["test", "old"]
+    // =================================================
+
+    const list = document.getElementById("student-list");
+
+    // Turns a folder name like "ilolo" into "Ilolo"
+    function niceName(folder) {
+      return folder.charAt(0).toUpperCase() + folder.slice(1);
+    }
+
+    // Shows one link per folder
+    function showFolders(folders) {
+      list.innerHTML = "";
+      if (folders.length === 0) {
+        list.innerHTML = "<li>No student pages yet.</li>";
+        return;
+      }
+      folders.forEach(folder => {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = folder + "/";
+        link.textContent = niceName(folder);
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+    }
+
+    // GitHub allows only 60 list requests per hour from one internet connection,
+    // so each browser remembers the list for 1 hour.
+    const ONE_HOUR = 60 * 60 * 1000;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem("folderList")); } catch (e) {}
+
+    if (saved && Date.now() - saved.time < ONE_HOUR) {
+      showFolders(saved.folders);
+    } else {
+      fetch("https://api.github.com/repos/" + USERNAME + "/" + REPOSITORY + "/contents/")
+        .then(response => {
+          if (!response.ok) { throw new Error("GitHub said " + response.status); }
+          return response.json();
+        })
+        .then(items => {
+          const folders = items
+            .filter(item => item.type === "dir")
+            .map(item => item.name)
+            .filter(name => !name.startsWith(".") && !HIDE.includes(name))
+            .sort();
+          try { localStorage.setItem("folderList", JSON.stringify({ time: Date.now(), folders: folders })); } catch (e) {}
+          showFolders(folders);
+        })
+        .catch(error => {
+          if (saved) {
+            showFolders(saved.folders);
+          } else {
+            list.innerHTML = "<li>The list could not load right now. Please try again in a few minutes.</li>";
+          }
+        });
+    }
+  </script>
+
+</body>
+</html>
